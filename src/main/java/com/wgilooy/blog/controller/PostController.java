@@ -1,7 +1,5 @@
 package com.wgilooy.blog.controller;
 
-import java.util.Map;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,20 +7,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.service.PostService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class PostController {
+
+    private final PostService postService;
     
     @PostMapping("/api/posts")
-    public Map<String, String> get(@RequestBody @Valid PostDTO post) throws Exception {
-        log.info("post={}", post);
+    public void get(@RequestBody @Valid PostDTO request) throws Exception {
+        log.info("post={}", request);
+        postService.write(request);
         
         // 데이터 검증 01
         // String title = post.getTitle();
-
+ 
         // if(title == null || title.equals("")) {
         //     throw new Exception("제목이 없습니다.");
         // }
@@ -46,11 +50,9 @@ public class PostController {
         // }
 
         // 데이터 검증 03 ControllerAdvice 모든 controller의 에러처리를 담당한다.
-        // 근데 BindingResult이 ControllerAdvice보다 우선적으로 잡혀 없앤다.
-        
-       
+        // 근데 BindingResult이 ControllerAdvice보다 우선적으로 잡혀서 없앤다.
 
-        return Map.of();
+
     }
 
 }
