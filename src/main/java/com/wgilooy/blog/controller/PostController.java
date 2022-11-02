@@ -1,12 +1,17 @@
 package com.wgilooy.blog.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.response.PostResponse;
 import com.wgilooy.blog.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,8 +56,15 @@ public class PostController {
 
         // 데이터 검증 03 ControllerAdvice 모든 controller의 에러처리를 담당한다.
         // 근데 BindingResult이 ControllerAdvice보다 우선적으로 잡혀서 없앤다.
-
-
     }
 
+    @GetMapping("/api/posts/{postId}")
+    public PostResponse get(@PathVariable(name="postId") Long id) {
+        return postService.get(id);
+    }
+
+    @GetMapping("/api/posts")
+    public List<PostResponse> posts() {
+        return postService.getList();
+    }
 }

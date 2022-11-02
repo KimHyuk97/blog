@@ -17,6 +17,11 @@ import com.wgilooy.blog.repositroy.PostRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -86,5 +91,55 @@ public class PostControllerTest {
         Assertions.assertEquals(1L, postRepository.count());
         Assertions.assertEquals("제목입니다.", post.getTitle());
         Assertions.assertEquals("내용입니다.", post.getContent());
+    }
+
+
+    @Test
+    @DisplayName("/posts 글 단일 조회 (title 10자만 조회해보기)")
+    void test03() throws Exception {
+        Post post = Post.builder()
+                        .content("단일 조회 테스트입니다.")
+                        .title("단일조회12345678910")
+                        .build();
+
+        postRepository.save(post);
+
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{postId}", post.getId())
+                            .contentType(APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(post.getId()))
+                        .andExpect(jsonPath("$.title").value("단일조회123456"))
+                        .andExpect(jsonPath("$.content").value("단일 조회 테스트입니다."))
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("/posts 글 여러개 조회 (title 10자만 조회해보기)")
+    void test04() throws Exception {
+        postRepository.saveAll(List.of(
+            Post.builder()
+                .title("title01")
+                .content("content01")
+                .build(),
+
+            Post.builder()
+                .title("title02")
+                .content("content02")
+                .build()
+        ));
+
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts")
+                            .contentType(APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                        .andExpect(jsonPath("$.[0].id").value(1L))
+                        .andExpect(jsonPath("$.[0].title").value("title01"))
+                        .andExpect(jsonPath("$.[0].content").value("content01"))
+                        .andExpect(jsonPath("$.[1].id").value(2L))
+                        .andExpect(jsonPath("$.[1].title").value("title02"))
+                        .andExpect(jsonPath("$.[1].content").value("content02"))
+                        .andDo(print());
     }
 }
