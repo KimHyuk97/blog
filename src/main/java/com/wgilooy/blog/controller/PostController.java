@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.response.PostResponse;
 import com.wgilooy.blog.service.PostService;
 
@@ -65,6 +66,12 @@ public class PostController {
 
     @GetMapping("/api/posts")
     public List<PostResponse> posts() {
-        return postService.getList();
+        return postService.posts();
+    }
+
+    @GetMapping("/api/getList")
+    public List<PostResponse> getList(PostSearch postSearch) {
+        System.err.println("postSearch : "+postSearch);
+        return postService.getList(postSearch);
     }
 }

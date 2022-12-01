@@ -5,6 +5,11 @@ spring:
     username: root
     password: 1111
 
+  # data:
+  #   web:
+  #     pageable:
+  #       default-page-size: 5
+
   jpa:
     open-in-view: true
     hibernate:

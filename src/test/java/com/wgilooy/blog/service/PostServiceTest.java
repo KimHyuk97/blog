@@ -1,6 +1,8 @@
 package com.wgilooy.blog.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.repositroy.PostRepository;
-import com.wgilooy.blog.response.PostResponse;
-
+import com.wgilooy.blog.response.PostResponse; 
 @SpringBootTest
 public class PostServiceTest {
 
@@ -86,7 +88,7 @@ public class PostServiceTest {
         postRepository.save(requestPost2);
 
         // when
-        List<PostResponse> posts = postService.getList();
+        List<PostResponse> posts = postService.posts();
 
         // then
 
@@ -94,5 +96,59 @@ public class PostServiceTest {
         Assertions.assertNotNull(posts);
 
         // Assertions.assertEquals();
+    }
+
+    @Test
+    @DisplayName("pagination 테스트")
+    void pagination() {
+        //given
+        List<Post> requestPost = IntStream.range(0, 30)  
+            .mapToObj(i -> Post.builder()
+                .content("내용입니다."+ i)
+                .title("제목입니다."+i)
+                .build())
+            .collect(Collectors.toList());
+                        
+        postRepository.saveAll(requestPost);
+
+        // when
+        PostSearch postSearch = PostSearch.builder()
+                                            .page(1)
+                                            .build();
+        
+        List<PostResponse> posts = postService.getList(postSearch);
+
+        // then
+        Assertions.assertNotNull(posts);
+        Assertions.assertEquals(10L, posts.size());
+        Assertions.assertEquals("제목입니다.29", posts.get(0).getTitle());
+        Assertions.assertEquals("제목입니다.25", posts.get(4).getTitle());
+    }
+
+    @Test
+    @DisplayName("pagination page가 0일 때 테스트")
+    void pagination_0_test() {
+        //given
+        List<Post> requestPost = IntStream.range(0, 30)  
+            .mapToObj(i -> Post.builder()
+                .content("내용입니다."+ i)
+                .title("제목입니다."+i)
+                .build())
+            .collect(Collectors.toList());
+                        
+        postRepository.saveAll(requestPost);
+
+        // when
+        PostSearch postSearch = PostSearch.builder()
+                                            .page(0)
+                                            .build();
+        
+        List<PostResponse> posts = postService.getList(postSearch);
+
+        // then
+        Assertions.assertNotNull(posts);
+        Assertions.assertEquals(10L, posts.size());
+        Assertions.assertEquals("제목입니다.29", posts.get(0).getTitle());
+        Assertions.assertEquals("제목입니다.25", posts.get(4).getTitle());
     }
 }

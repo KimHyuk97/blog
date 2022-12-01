@@ -1,12 +1,13 @@
 package com.wgilooy.blog.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Collectors; 
 
 import org.springframework.stereotype.Service;
 
 import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse;
 
@@ -43,11 +44,19 @@ public class PostService {
                         .build();
     }
 
-    public List<PostResponse> getList() {
+    public List<PostResponse> posts() {
         List<Post> posts = postRepository.findAll();
         return posts.stream()
                 .map(PostResponse :: new)
                 .collect(Collectors.toList()); 
+    }
+
+    public List<PostResponse> getList(PostSearch postSearch) {
+       
+        return postRepository.getList(postSearch)
+            .stream()
+            .map(PostResponse :: new)
+            .collect(Collectors.toList());
     }
 
 }

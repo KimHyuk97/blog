@@ -18,11 +18,11 @@ import com.wgilooy.blog.repositroy.PostRepository;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -108,7 +108,6 @@ public class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{postId}", post.getId())
                             .contentType(APPLICATION_JSON))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.id").value(post.getId()))
                         .andExpect(jsonPath("$.title").value("단일조회123456"))
                         .andExpect(jsonPath("$.content").value("단일 조회 테스트입니다."))
                         .andDo(print());
@@ -134,12 +133,52 @@ public class PostControllerTest {
                             .contentType(APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.length()", Matchers.is(2)))
-                        .andExpect(jsonPath("$.[0].id").value(1L))
                         .andExpect(jsonPath("$.[0].title").value("title01"))
                         .andExpect(jsonPath("$.[0].content").value("content01"))
-                        .andExpect(jsonPath("$.[1].id").value(2L))
                         .andExpect(jsonPath("$.[1].title").value("title02"))
                         .andExpect(jsonPath("$.[1].content").value("content02"))
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("/posts 글 여러개 조회 페이지 테스트")
+    void test05() throws Exception {
+        //given
+        List<Post> requestPost = IntStream.range(0, 30)  
+            .mapToObj(i -> Post.builder()
+                .content("내용입니다."+ i)
+                .title("제목입니다."+i)
+                .build())
+            .collect(Collectors.toList());
+                        
+        postRepository.saveAll(requestPost);
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/getList?page=1&size=10")
+                            .contentType(APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.length()", Matchers.is(10)))
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("/페이지가 0일 때 테스트")
+    void test6() throws Exception {
+        //given
+        List<Post> requestPost = IntStream.range(0, 30)  
+            .mapToObj(i -> Post.builder()
+                .content("내용입니다."+ i)
+                .title("제목입니다."+i)
+                .build())
+            .collect(Collectors.toList());
+                        
+        postRepository.saveAll(requestPost);
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/getList?page=0&size=10")
+                            .contentType(APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.length()", Matchers.is(10)))
                         .andDo(print());
     }
 }

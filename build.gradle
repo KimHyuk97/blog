@@ -8,6 +8,10 @@ group = 'com.wgilooy.blog'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+jar {
+	enabled=false
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -23,6 +27,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
+	// querydsl
+	implementation 'com.querydsl:querydsl-core'
+	implementation 'com.querydsl:querydsl-jpa'
+	
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -33,3 +45,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
