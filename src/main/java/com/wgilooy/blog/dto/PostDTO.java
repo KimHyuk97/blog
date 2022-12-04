@@ -2,14 +2,19 @@ package com.wgilooy.blog.dto;
 
 import javax.validation.constraints.NotBlank;
 
+import com.wgilooy.blog.exception.InValidException;
+
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostDTO {
 
     // NotBlank 빈값 or null 체크
@@ -24,6 +29,12 @@ public class PostDTO {
     public PostDTO(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void isValid() {
+        if(title.contains("바보")) {
+            throw new InValidException("title", "제목에 금지어가 포함되어있습니다('바보')");
+        }
     }
 
     /**

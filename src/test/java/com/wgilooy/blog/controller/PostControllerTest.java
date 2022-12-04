@@ -94,6 +94,26 @@ public class PostControllerTest {
         Assertions.assertEquals("내용입니다.", post.getContent());
     }
 
+    @Test
+    @DisplayName("게시글 작성 시 제목에 '바보'라는 글이 포함되면 예외처리한다.")
+    void test02_exception() throws Exception {
+        PostDTO request = PostDTO.builder()
+                                .title("바보")
+                                .content("내용입니다.")
+                                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/posts")
+                            .contentType(APPLICATION_JSON)
+                            .content(json))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$.code").value("400"))
+                        .andExpect(jsonPath("$.message").value("금지된 단어 입니다."))
+                        .andExpect(jsonPath("$.validation.title").value("제목에 금지어가 포함되어있습니다('바보')"))
+                        .andDo(print());
+    }
+
 
     @Test
     @DisplayName("/posts 글 단일 조회 (title 10자만 조회해보기)")
@@ -233,6 +253,51 @@ public class PostControllerTest {
                             .contentType(APPLICATION_JSON)
                         )
                         .andExpect(status().isOk())
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 조회")
+    void test9_get_expected() throws Exception {
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{id}", 1L)    
+                            .contentType(APPLICATION_JSON)
+                        )
+                        .andExpect(status().isNotFound())
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 수정")
+    void test9_patch_expected() throws Exception {
+
+        // 2. 변경할 데이터 생성
+        PostEidt postEidt = PostEidt.builder()
+            .title("제목2")
+            .content("내용")
+            .build();
+
+        String json = objectMapper.writeValueAsString(postEidt);
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/posts/{id}", 1L)    
+                            .contentType(APPLICATION_JSON)
+                            .content(json)
+                        )
+                        .andExpect(status().isNotFound())
+                        .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 삭제")
+    void test9_delete_expected() throws Exception {
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/posts/{id}", 1L)    
+                            .contentType(APPLICATION_JSON)
+                        )
+                        .andExpect(status().isNotFound())
                         .andDo(print());
     }
 }

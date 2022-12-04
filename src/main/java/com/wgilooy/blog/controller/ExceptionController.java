@@ -2,17 +2,17 @@ package com.wgilooy.blog.controller;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.wgilooy.blog.exception.BlogException;
 import com.wgilooy.blog.response.ErrorResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestControllerAdvice
 public class ExceptionController {
 
@@ -29,8 +29,46 @@ public class ExceptionController {
             respone.addValidation(error.getField(), error.getDefaultMessage());
         }
 
-        log.error("respone={}", respone);
         return respone;
+    }
+
+    // @ResponseBody
+    // @ResponseStatus(HttpStatus.NOT_FOUND)
+    // @ExceptionHandler(PostNotFound.class)
+    // public ErrorResponse PostNotFound(PostNotFound e) {
+    //     ErrorResponse respone = ErrorResponse.builder()
+    //                                          .code("404")
+    //                                          .message(e.getMessage())
+    //                                          .build();
+        
+    //     log.error("respone={}", respone);                       
+    //     return respone;
+    // }
+
+    // @ResponseBody
+    // @ResponseStatus(HttpStatus.BAD_REQUEST)
+    // @ExceptionHandler(InValidException.class)
+    // public ErrorResponse InValidException(InValidException e) {
+    //     ErrorResponse respone = ErrorResponse.builder()
+    //                                          .code("400")
+    //                                          .message(e.getMessage())
+    //                                          .build();
+        
+    //     log.error("respone={}", respone);                       
+    //     return respone;
+    // }
+
+    @ResponseBody
+    @ExceptionHandler(BlogException.class)
+    public ResponseEntity<ErrorResponse> BlogException(BlogException e) {
+        ErrorResponse body = ErrorResponse.builder()
+                                             .code(String.valueOf(e.statusCode()))
+                                             .message(e.getMessage())
+                                             .validation(e.getValidation())
+                                             .build();     
+                                                                                                                                                        
+        return ResponseEntity.status(e.statusCode())
+        .body(body);
     }
     
 }

@@ -11,6 +11,7 @@ import com.wgilooy.blog.domain.PostEidtor;
 import com.wgilooy.blog.dto.PostDTO;
 import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
+import com.wgilooy.blog.exception.PostNotFound;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse;
 
@@ -38,7 +39,7 @@ public class PostService {
 
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
-            .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 글입니다."));
+            .orElseThrow(PostNotFound::new);
        
         return PostResponse.builder()
                         .id(post.getId())
@@ -65,7 +66,7 @@ public class PostService {
     @Transactional
     public PostResponse edit(Long id, PostEidt postEidt) {
         Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+            .orElseThrow(PostNotFound::new);
 
         // 빌더 활용
         // PostEidtor.PostEidtorBuilder eidtorBuilder = post.toEidtor();
@@ -93,7 +94,7 @@ public class PostService {
 
     public void delete(Long id) {
         Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+            .orElseThrow(PostNotFound::new);
 
         postRepository.delete(post);
     }

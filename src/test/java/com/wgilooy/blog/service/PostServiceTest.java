@@ -15,6 +15,7 @@ import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
 import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
+import com.wgilooy.blog.exception.PostNotFound;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse; 
 @SpringBootTest
@@ -59,11 +60,15 @@ public class PostServiceTest {
                         
         postRepository.save(requestPost);
 
+        // expected
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.get(requestPost.getId() +1L);
+        });
+
         // when
         PostResponse post = postService.get(requestPost.getId());
 
         // then
-
         // null 체크
         Assertions.assertNotNull(post);
 
@@ -196,6 +201,11 @@ public class PostServiceTest {
                                     .content("내용입니다2")
                                     .build();
 
+        // expected
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.edit(requestPost.getId() +1L, postEidt);
+        });
+
         // when
         postService.edit(requestPost.getId(), postEidt);
 
@@ -218,13 +228,16 @@ public class PostServiceTest {
                         
         postRepository.save(requestPost);
 
+        // expected
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.delete(requestPost.getId() +1L);
+        });
+
         // when
         postService.delete(requestPost.getId());
 
         // then
         Assertions.assertEquals(0, postRepository.count());
     }
-
-
-    
+   
 }

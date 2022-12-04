@@ -1,33 +1,33 @@
 package com.wgilooy.blog.response;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+
 
 @Getter
 public class ErrorResponse {
     private final String code;
     private final String message;
-    private final List<Validation> validation = new ArrayList<>();
+    
+    // 비어있는 값은 넘어가지 않는다.
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+    private final Map<String, String> validation;
 
     
     @Builder
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(String code, String message, Map<String, String> validation) {
         this.code = code;
         this.message = message;
+        this.validation = validation != null ? validation : new HashMap<>();
     }
 
     public void addValidation(String field, String errorMessage) {
-        validation.add(new Validation(field, errorMessage));
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    private class Validation {
-        private final String field;
-        private final String errorMessage;
+        validation.put(field, errorMessage);
     }
 }
