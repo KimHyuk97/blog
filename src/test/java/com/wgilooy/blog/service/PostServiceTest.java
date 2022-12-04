@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse; 
@@ -151,4 +152,61 @@ public class PostServiceTest {
         Assertions.assertEquals("제목입니다.29", posts.get(0).getTitle());
         Assertions.assertEquals("제목입니다.25", posts.get(4).getTitle());
     }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void post_eidt_title() {
+        //given
+        Post requestPost = Post.builder()
+                        .title("제목입니다.")
+                        .content("내용")
+                        .build();      
+                        
+        postRepository.save(requestPost);
+
+        PostEidt postEidt = PostEidt.builder()
+                                    .title("제목 변경")
+                                    .content(requestPost.getContent())
+                                    .build();
+
+        // when
+        postService.edit(requestPost.getId(), postEidt);
+
+        Post changePost = postRepository.findById(requestPost.getId())
+            .orElseThrow(()-> new RuntimeException("존재하지 않는 글입니다. id="+requestPost.getId()));
+
+        // then
+        Assertions.assertEquals("제목 변경", changePost.getTitle());
+        Assertions.assertEquals("내용", changePost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void post_eidt_content() {
+        //given
+        Post requestPost = Post.builder()
+                        .title("제목입니다.")
+                        .content("내용입니다.")
+                        .build();      
+                        
+        postRepository.save(requestPost);
+
+        PostEidt postEidt = PostEidt.builder()
+                                    .title(requestPost.getTitle())
+                                    .content("내용입니다2")
+                                    .build();
+
+        // when
+        postService.edit(requestPost.getId(), postEidt);
+
+        Post changePost = postRepository.findById(requestPost.getId())
+            .orElseThrow(()-> new RuntimeException("존재하지 않는 글입니다. id="+requestPost.getId()));
+
+        // then
+        Assertions.assertEquals("제목입니다.", changePost.getTitle());
+        Assertions.assertEquals("내용입니다2", changePost.getContent());
+    }
+
+
+    
 }

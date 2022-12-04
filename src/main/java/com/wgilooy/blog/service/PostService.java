@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors; 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wgilooy.blog.domain.Post;
+import com.wgilooy.blog.domain.PostEidtor;
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse;
@@ -57,6 +60,34 @@ public class PostService {
             .stream()
             .map(PostResponse :: new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public PostResponse edit(Long id, PostEidt postEidt) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+        // 빌더 활용
+        // PostEidtor.PostEidtorBuilder eidtorBuilder = post.toEidtor();
+
+        // if(postEidt.getTitle() != null) {
+        //     eidtorBuilder.title(postEidt.getTitle());
+        // }
+
+        // if(postEidt.getContent() != null) {
+        //     eidtorBuilder.content(postEidt.getContent());
+        // }
+
+        // post.edit(eidtorBuilder.build());
+
+        PostEidtor postEidtor = post.toEidtor()
+            .title(postEidt.getTitle())
+            .content(postEidt.getContent())
+            .build();
+        
+        post.edit(postEidtor);
+
+        return new PostResponse(post);
     }
 
 }

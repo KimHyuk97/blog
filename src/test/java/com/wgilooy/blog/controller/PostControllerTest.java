@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.repositroy.PostRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -179,6 +180,39 @@ public class PostControllerTest {
                             .contentType(APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.length()", Matchers.is(10)))
+                        .andDo(print());
+    }
+
+
+
+    @Test
+    @DisplayName("/posts 글 제목 수정")
+    void test7_title_edit() throws Exception {
+
+        //1. 글 저장
+        Post post = Post.builder()
+                        .content("제목")
+                        .title("내용")
+                        .build();
+
+        postRepository.save(post);
+
+        // 2. 변경할 데이터 생성
+        PostEidt postEidt = PostEidt.builder()
+            .title("제목2")
+            .content("내용")
+            .build();
+
+        String json = objectMapper.writeValueAsString(postEidt);
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/posts/{id}", post.getId())    
+                            .contentType(APPLICATION_JSON)
+                            .content(json)
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.title").value("제목2"))
+                        .andExpect(jsonPath("$.content").value("내용"))
                         .andDo(print());
     }
 }

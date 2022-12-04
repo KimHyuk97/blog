@@ -5,12 +5,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wgilooy.blog.dto.PostDTO;
+import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.response.PostResponse;
 import com.wgilooy.blog.service.PostService;
@@ -73,5 +75,12 @@ public class PostController {
     public List<PostResponse> getList(PostSearch postSearch) {
         System.err.println("postSearch : "+postSearch);
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/api/posts/{id}")
+    public PostResponse edit(@PathVariable Long id,
+        @RequestBody @Valid PostEidt postEidt) {
+        
+        return postService.edit(id, postEidt);
     }
 }

@@ -30,6 +30,18 @@ public class Post {
         this.content = content;
     }
 
+    public PostEidtor.PostEidtorBuilder toEidtor() {
+        return PostEidtor.builder()
+            .title(title)
+            .content(content);
+    }
+
+
+    // 글 수정
+    public void edit(PostEidtor postEidtor) {
+        title = postEidtor.getTitle();
+        content = postEidtor.getContent();
+    }
     
     
 }
