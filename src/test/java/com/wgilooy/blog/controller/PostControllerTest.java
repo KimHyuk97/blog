@@ -215,4 +215,24 @@ public class PostControllerTest {
                         .andExpect(jsonPath("$.content").value("내용"))
                         .andDo(print());
     }
+
+    @Test
+    @DisplayName("/posts 글 삭제")
+    void test8_delete() throws Exception {
+
+        //1. 글 저장
+        Post post = Post.builder()
+                        .content("제목")
+                        .title("내용")
+                        .build();
+
+        postRepository.save(post);
+        
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/posts/{id}", post.getId())    
+                            .contentType(APPLICATION_JSON)
+                        )
+                        .andExpect(status().isOk())
+                        .andDo(print());
+    }
 }

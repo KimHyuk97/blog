@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,5 +83,11 @@ public class PostController {
         @RequestBody @Valid PostEidt postEidt) {
         
         return postService.edit(id, postEidt);
+    }
+
+    @DeleteMapping("/api/posts/{id}")
+    public void delete(@PathVariable Long id) {
+        
+        postService.delete(id);
     }
 }
