@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wgilooy.blog.domain.Post;
 import com.wgilooy.blog.dto.PostDTO;
@@ -18,6 +19,7 @@ import com.wgilooy.blog.dto.PostSearch;
 import com.wgilooy.blog.exception.PostNotFound;
 import com.wgilooy.blog.repositroy.PostRepository;
 import com.wgilooy.blog.response.PostResponse; 
+
 @SpringBootTest
 public class PostServiceTest {
 
@@ -34,6 +36,7 @@ public class PostServiceTest {
     
     @Test
     @DisplayName("글 작성")
+    @Transactional
     void testWrite() {
         // given
         PostDTO postDto = PostDTO.builder()
@@ -51,6 +54,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("글 1개 조회")
+    @Transactional
     void testGet() {
         //given
         Post requestPost = Post.builder()
@@ -77,6 +81,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("글 여러개 조회")
+    @Transactional
     void testGetList() {
         //given
         Post requestPost = Post.builder()
@@ -106,6 +111,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("pagination 테스트")
+    @Transactional
     void pagination() {
         //given
         List<Post> requestPost = IntStream.range(0, 30)  
@@ -133,6 +139,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("pagination page가 0일 때 테스트")
+    @Transactional
     void pagination_0_test() {
         //given
         List<Post> requestPost = IntStream.range(0, 30)  
@@ -160,6 +167,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("글 제목 수정")
+    @Transactional
     void post_eidt_title() {
         //given
         Post requestPost = Post.builder()
@@ -187,6 +195,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("글 내용 수정")
+    @Transactional
     void post_eidt_content() {
         //given
         Post requestPost = Post.builder()
@@ -219,6 +228,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("글 삭제")
+    @Transactional
     void post_delete() {
         //given
         Post requestPost = Post.builder()

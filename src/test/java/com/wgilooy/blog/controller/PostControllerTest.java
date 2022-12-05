@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wgilooy.blog.domain.Post;
@@ -50,6 +51,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/post 요청시 title값은 필수다.")
+    @Transactional
     void test01() throws Exception {
         
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts")
@@ -68,6 +70,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/post 요청시 db에 값을 저장시킨다.")
+    @Transactional
     void test02() throws Exception {
         PostDTO request = PostDTO.builder()
                                 .title("제목입니다.")
@@ -96,6 +99,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("게시글 작성 시 제목에 '바보'라는 글이 포함되면 예외처리한다.")
+    @Transactional
     void test02_exception() throws Exception {
         PostDTO request = PostDTO.builder()
                                 .title("바보")
@@ -117,6 +121,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/posts 글 단일 조회 (title 10자만 조회해보기)")
+    @Transactional
     void test03() throws Exception {
         Post post = Post.builder()
                         .content("단일 조회 테스트입니다.")
@@ -136,6 +141,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/posts 글 여러개 조회 (title 10자만 조회해보기)")
+    @Transactional
     void test04() throws Exception {
         postRepository.saveAll(List.of(
             Post.builder()
@@ -163,6 +169,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/posts 글 여러개 조회 페이지 테스트")
+    @Transactional
     void test05() throws Exception {
         //given
         List<Post> requestPost = IntStream.range(0, 30)  
@@ -184,6 +191,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/페이지가 0일 때 테스트")
+    @Transactional
     void test6() throws Exception {
         //given
         List<Post> requestPost = IntStream.range(0, 30)  
@@ -207,6 +215,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/posts 글 제목 수정")
+    @Transactional
     void test7_title_edit() throws Exception {
 
         //1. 글 저장
@@ -238,6 +247,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("/posts 글 삭제")
+    @Transactional
     void test8_delete() throws Exception {
 
         //1. 글 저장
@@ -258,6 +268,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 글 조회")
+    @Transactional
     void test9_get_expected() throws Exception {
         
         // expected
@@ -270,6 +281,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 글 수정")
+    @Transactional
     void test9_patch_expected() throws Exception {
 
         // 2. 변경할 데이터 생성
@@ -291,6 +303,7 @@ public class PostControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 글 삭제")
+    @Transactional
     void test9_delete_expected() throws Exception {
         
         // expected

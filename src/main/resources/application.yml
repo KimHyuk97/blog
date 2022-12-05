@@ -11,9 +11,9 @@ spring:
   #       default-page-size: 5
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:  
         hibernate.default_batch_fetch_size: 1000
         hibernate:
