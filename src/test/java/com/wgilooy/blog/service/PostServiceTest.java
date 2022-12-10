@@ -185,6 +185,9 @@ public class PostServiceTest {
         // when
         postService.edit(requestPost.getId(), postEidt);
 
+
+        System.err.println("error");
+
         Post changePost = postRepository.findById(requestPost.getId())
             .orElseThrow(()-> new RuntimeException("존재하지 않는 글입니다. id="+requestPost.getId()));
 
