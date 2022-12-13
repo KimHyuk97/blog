@@ -1,0 +1,1 @@
+{"version":"0.0.0","name":"front","dependencies":{"axios":{"version":"1.2.1"},"bootstrap":{"version":"5.2.0-beta1"},"element-plus":{"version":"2.2.26"},"pinia":{"version":"2.0.28"},"vue-router":{"version":"4.1.6"},"vue":{"version":"3.2.45"}}}
