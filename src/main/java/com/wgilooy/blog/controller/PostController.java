@@ -19,9 +19,7 @@ import com.wgilooy.blog.response.PostResponse;
 import com.wgilooy.blog.service.PostService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostController {
@@ -30,7 +28,6 @@ public class PostController {
     
     @PostMapping("/api/posts")
     public void write(@RequestBody @Valid PostDTO request) throws Exception {
-        log.info("post={}", request);
         request.isValid();
         postService.write(request);
     }

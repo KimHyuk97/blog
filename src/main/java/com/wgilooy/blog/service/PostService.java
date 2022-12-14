@@ -65,6 +65,9 @@ public class PostService {
 
     @Transactional
     public PostResponse edit(Long id, PostEidt postEidt) {
+
+        System.err.println(postEidt);
+
         Post post = postRepository.findById(id)
             .orElseThrow(PostNotFound::new);
 
