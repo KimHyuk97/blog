@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wgilooy.blog.config.data.UserSession;
 import com.wgilooy.blog.dto.PostDTO;
 import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
@@ -19,12 +20,22 @@ import com.wgilooy.blog.response.PostResponse;
 import com.wgilooy.blog.service.PostService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info("userSession={}",userSession);
+        return "foo";
+    }
+
+    
     
     @PostMapping("/api/posts")
     public void write(@RequestBody @Valid PostDTO request) throws Exception {

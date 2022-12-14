@@ -18,3 +18,8 @@ spring:
         hibernate.default_batch_fetch_size: 1000
         hibernate:
           format-sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always

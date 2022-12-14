@@ -1,0 +1,1 @@
+INSERT INTO USER (email, password) VALUES ("wgilooy97@naver.com", "1234");
