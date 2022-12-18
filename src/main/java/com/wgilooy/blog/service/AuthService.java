@@ -1,7 +1,9 @@
 package com.wgilooy.blog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.wgilooy.blog.domain.Token;
 import com.wgilooy.blog.domain.User;
 import com.wgilooy.blog.dto.Login;
 import com.wgilooy.blog.exception.LoginFailure;
@@ -11,16 +13,19 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService {
 
     private final UserRepository userRepository;
 
-    public User login(Login loginUser) {
+    @Transactional
+    public String signin(Login request) {
 
-        User user = userRepository.findByEmailAndPassword(loginUser.getEmail(), loginUser.getPassword())
+        User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
             .orElseThrow(LoginFailure:: new);
 
-        return user;
+        Token token = user.addToken();
+
+        return token.getAccessToken();
     }
     
 }

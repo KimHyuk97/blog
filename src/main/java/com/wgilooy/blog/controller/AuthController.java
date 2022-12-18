@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wgilooy.blog.domain.User;
 import com.wgilooy.blog.dto.Login;
-import com.wgilooy.blog.service.UserService;
+import com.wgilooy.blog.response.TokenResponse;
+import com.wgilooy.blog.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,13 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
     
     @PostMapping("/auth/login")
-    public User login(@RequestBody @Valid Login loginUser) {
-        User user = userService.login(loginUser);
+    public TokenResponse login(@RequestBody @Valid Login request) {
+        String accessToken = authService.signin(request);
 
-        return user;
+        return new TokenResponse(accessToken);
     }
 
 }

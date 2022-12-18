@@ -8,8 +8,16 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.wgilooy.blog.config.data.UserSession;
+import com.wgilooy.blog.domain.Token;
+import com.wgilooy.blog.exception.UnAuthorized;
+import com.wgilooy.blog.repositroy.TokenRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
+
+    private final TokenRepository tokenRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -20,9 +28,18 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-        UserSession userSession = new UserSession();
-        userSession.name = webRequest.getHeader("auth");
-        return userSession;
+
+        String accessToken = webRequest.getHeader("Authorization");
+
+        if(accessToken == null || accessToken.equals("")) {
+            throw new UnAuthorized();
+        }
+
+        Token token = tokenRepository.findByAccessToken(accessToken)
+            .orElseThrow(UnAuthorized:: new);
+
+
+        return new UserSession(token.getUser().getId());
     }
     
 }
