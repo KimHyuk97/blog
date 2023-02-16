@@ -1,25 +1,21 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
-    username: root
-    password: 1111
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
+        username: root
+        password: 1111
 
-  # data:
-  #   web:
-  #     pageable:
-  #       default-page-size: 5
+    # data:
+    #   web:
+    #     pageable:
+    #       default-page-size: 5
 
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    properties:  
-        hibernate.default_batch_fetch_size: 1000
+    jpa:
+        open-in-view: false
         hibernate:
-          format-sql: true
-    defer-datasource-initialization: true
-
-  sql:
-    init:
-      mode: always
+            ddl-auto: update
+        properties:
+            hibernate.default_batch_fetch_size: 1000
+            hibernate:
+                format-sql: true
+        defer-datasource-initialization: true

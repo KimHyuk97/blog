@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wgilooy.blog.dto.Login;
+import com.wgilooy.blog.dto.Signup;
 import com.wgilooy.blog.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,11 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .build();
+    }
+
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody @Valid Signup signup) {
+        authService.signup(signup);
     }
 
 }
