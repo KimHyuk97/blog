@@ -21,31 +21,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+	private final AuthService authService;
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody @Valid Login request) {
-        String accessToken = authService.signin(request);
-        ResponseCookie cookie = ResponseCookie
-                .from("SESSION", accessToken)
-                .domain("localhost")
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(Duration.ofDays(30))
-                .sameSite("Strict")
-                .build();
+	@PostMapping("/auth/login")
+	public ResponseEntity<?> login(@RequestBody @Valid Login request) {
+		String accessToken = authService.signin(request);
+		ResponseCookie cookie = ResponseCookie
+			.from("SESSION", accessToken)
+			.domain("localhost")
+			.path("/")
+			.httpOnly(true)
+			.secure(false)
+			.maxAge(Duration.ofDays(30))
+			.sameSite("Strict")
+			.build();
 
-        System.out.println(cookie);
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, cookie.toString())
+			.build();
+	}
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
-    }
-
-    @PostMapping("/auth/signup")
-    public void signup(@RequestBody @Valid Signup signup) {
-        authService.signup(signup);
-    }
+	@PostMapping("/auth/signup")
+	public void signup(@RequestBody @Valid Signup signup) {
+		authService.signup(signup);
+	}
 
 }

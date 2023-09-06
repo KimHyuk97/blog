@@ -1,4 +1,4 @@
-= wgilooy API
+= Blog API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -9,22 +9,27 @@
 == 글 단건조회
 
 === 요청
+
+include::{snippets}/post_inquiry/curl-request.adoc[]
+
 include::{snippets}/post_inquiry/http-request.adoc[]
 
 include::{snippets}/post_inquiry/path-parameters.adoc[]
 
 === 응답
+
 include::{snippets}/post_inquiry/http-response.adoc[]
 
 include::{snippets}/post_inquiry/response-fields.adoc[]
 
-
 == 글 등록
 
 === 요청
+
 include::{snippets}/post-create/http-request.adoc[]
 
 include::{snippets}/post-create/request-fields.adoc[]
 
 === 응답
+
 include::{snippets}/post-create/http-response.adoc[]

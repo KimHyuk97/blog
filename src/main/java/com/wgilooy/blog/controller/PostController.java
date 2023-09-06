@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wgilooy.blog.config.data.UserSession;
 import com.wgilooy.blog.dto.PostDTO;
 import com.wgilooy.blog.dto.PostEidt;
 import com.wgilooy.blog.dto.PostSearch;
@@ -29,16 +28,8 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/foo")
-    public String foo(UserSession userSession) {
-        log.info("userSession={}",userSession);
-        return "foo";
-    }
-
-    
-    
     @PostMapping("/api/posts")
-    public void write(@RequestBody @Valid PostDTO request) throws Exception {
+    public void write(@RequestBody @Valid PostDTO request) {
         request.isValid();
         postService.write(request);
     }
@@ -55,20 +46,19 @@ public class PostController {
 
     @GetMapping("/api/getList")
     public List<PostResponse> getList(PostSearch postSearch) {
-        System.err.println("postSearch : "+postSearch);
+
         return postService.getList(postSearch);
     }
 
     @PatchMapping("/api/posts/{id}")
-    public PostResponse edit(@PathVariable Long id,
-        @RequestBody @Valid PostEidt postEidt) {
-        
+    public PostResponse edit(@PathVariable Long id, @RequestBody @Valid PostEidt postEidt) {
+
         return postService.edit(id, postEidt);
     }
 
     @DeleteMapping("/api/posts/{id}")
     public void delete(@PathVariable Long id) {
-        
+
         postService.delete(id);
     }
 }
